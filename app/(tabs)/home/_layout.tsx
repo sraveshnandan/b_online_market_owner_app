@@ -3,9 +3,9 @@ import { tintColorLight } from "@/constants"
 import { Stack } from "expo-router"
 export default function AuthLayout() {
     return (
-        <Stack>
+        <Stack screenOptions={{ animation: "ios" }}>
             <Stack.Screen name="index" />
-            <Stack.Screen name="shopDetails" />
+            <Stack.Screen name="shop_details" />
         </Stack>
     )
 }

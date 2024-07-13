@@ -1,17 +1,17 @@
 
 import { Colors, tintColorLight } from "@/constants"
-import { Ionicons } from "@expo/vector-icons"
+import { AntDesign, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons"
 import { Tabs } from "expo-router"
 export default function AuthLayout() {
     const wishlistProduct = ["ww", "ss"]
-    const wishlistShop = [22, 22, 222]
+    const wishlistShop = [22, 22]
     return (
-        <Tabs screenOptions={{ headerShown: false, tabBarActiveTintColor: tintColorLight, tabBarInactiveTintColor: Colors.light.icon }}>
+        <Tabs screenOptions={{ headerShown: false, tabBarHideOnKeyboard: true, tabBarActiveTintColor: tintColorLight, tabBarInactiveTintColor: Colors.Gray }}>
 
             {/* home tab  */}
             <Tabs.Screen name="home" options={{
                 tabBarIcon: ({ color, focused }) => (
-                    <Ionicons name={focused ? "home" : "home-outline"} color={color} size={30} />
+                    <MaterialCommunityIcons name={focused ? "home" : "home-outline"} color={color} size={34} />
                 ),
                 tabBarShowLabel: false
             }} />
@@ -19,7 +19,7 @@ export default function AuthLayout() {
             {/* category tab  */}
             <Tabs.Screen name="category" options={{
                 tabBarIcon: ({ color, focused }) => (
-                    <Ionicons name={focused ? "logo-buffer" : "logo-buffer"} color={color} size={30} />
+                    <Ionicons name={focused ? "logo-buffer" : "logo-buffer"} color={color} size={28} />
                 ),
                 tabBarShowLabel: false
             }} />
@@ -28,7 +28,7 @@ export default function AuthLayout() {
             {/* Wishlist tab  */}
             <Tabs.Screen name="wishlist" options={{
                 tabBarIcon: ({ color, focused }) => (
-                    <Ionicons name={focused ? "heart-outline" : "heart-sharp"} color={color} size={30} />
+                    <Ionicons name={focused ? "heart-sharp" : "heart-outline"} color={color} size={28} />
                 ),
                 tabBarShowLabel: false,
                 tabBarBadge: wishlistProduct.length + wishlistShop.length,
@@ -42,7 +42,7 @@ export default function AuthLayout() {
             {/* profile tab  */}
             <Tabs.Screen name="profile" options={{
                 tabBarIcon: ({ color, focused }) => (
-                    <Ionicons name={focused ? "person-sharp" : "person-outline"} color={color} size={30} />
+                    <Ionicons name={focused ? "person-sharp" : "person-outline"} color={color} size={28} />
                 ),
                 tabBarShowLabel: false
             }} />

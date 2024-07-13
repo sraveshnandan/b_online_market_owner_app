@@ -4,12 +4,7 @@ import { Stack } from "expo-router"
 export default function AuthLayout() {
     return (
         <Stack screenOptions={{ headerBackVisible: true }}>
-            <Stack.Screen name="index" options={{
-                headerTitle:"Category",
-                headerSearchBarOptions:{
-                    headerIconColor:tintColorLight
-                }
-            }} />
+            <Stack.Screen name="index" />
         </Stack>
     )
 }

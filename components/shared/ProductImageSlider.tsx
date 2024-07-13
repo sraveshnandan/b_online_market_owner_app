@@ -1,41 +1,34 @@
-import { hp, ScreenHeight, ScreenWidth } from "@/constants";
-import { IBanners } from "@/types";
-import React, { useEffect, useRef, useState } from "react";
+import { Colors, ScreenHeight, ScreenWidth, } from "@/constants";
+import React, { useRef, useState } from "react";
 import {
     View,
     StyleSheet,
     ScrollView,
     Image,
     ImageStyle,
-    ViewStyle,
-    TouchableOpacity,
+    ViewStyle
 } from "react-native";
 
 interface ISliderProps {
-    images?: IBanners[] | [];
-    dotColor?: string | "#000";
-    inActiveDotColor?: string | "#000";
-    delay?: number | 1500;
-    infinite?: boolean | false;
+    images?: { id?: string; url?: string }[];
+    dotColor?: string | "royalblue";
+    inActiveDotColor?: string | "#222";
     contentStyle?: ImageStyle;
     containerStyle?: ViewStyle;
 }
 
-const imageSlider = ({
+const ProductimageSlider = ({
     images,
     dotColor,
     inActiveDotColor,
-    delay,
-    infinite,
     containerStyle,
     contentStyle,
 }: ISliderProps) => {
     const width = ScreenWidth * 0.96;
-    const height = ScreenHeight * 0.25;
+    const height = ScreenHeight * 0.4;
     // Satates
     const [active, setActive] = useState<number>(0);
     const scrollViewRef = useRef<ScrollView | null>(null);
-    const [Images, setimages] = useState<IBanners[] | string[]>([]);
 
     // OnSlider Window Changed
     const onScrollChange = ({ nativeEvent }: { nativeEvent: any }) => {
@@ -46,28 +39,6 @@ const imageSlider = ({
             setActive(slide);
         }
     };
-
-    // IF loop is on
-    if (infinite === true) {
-        useEffect(() => {
-            const interval = setInterval(() => {
-                if (images && active < images.length) {
-                    setActive(active + 1);
-                    scrollViewRef.current?.scrollTo({
-                        x: (active + 1) * width,
-                        animated: true,
-                    });
-                } else {
-                    scrollViewRef.current?.scrollTo({
-                        x: 0,
-                        animated: true,
-                    });
-                    setActive(0);
-                }
-            }, delay);
-            return () => clearInterval(interval);
-        }, [active]);
-    }
 
     // handle image click
 
@@ -87,30 +58,25 @@ const imageSlider = ({
                 scrollEventThrottle={16}
             >
                 {images &&
-                    images.map((item: any, index) => (
-                        <TouchableOpacity
-                            onPress={() => handleImageClick(index)}
-                            key={index}
-                        >
+                    images.map((item, index) => (
+                        <View key={index}>
                             <Image
                                 style={[
                                     {
-                                        width: width,
-                                        height: height * 0.9,
-
+                                        width: width * 0.996,
+                                        height: height,
                                     },
                                     contentStyle ? contentStyle : null,
                                 ]}
-                                resizeMethod="auto"
-                                className="rounded-lg shadow-lg object-fill"
-                                source={{ uri: item.image?.url }}
+                                resizeMethod="resize"
+                                source={{ uri: item.url }}
                             />
-                        </TouchableOpacity>
+                        </View>
                     ))}
             </ScrollView>
             <View style={styles.pagination}>
                 {images &&
-                    images.map((i: IBanners, index: number) => (
+                    images.map((i: any, index: number) => (
                         <View
                             key={index}
                             style={
@@ -124,7 +90,7 @@ const imageSlider = ({
                                     }
                                     : {
                                         marginHorizontal: 5,
-                                        backgroundColor: inActiveDotColor || "#000",
+                                        backgroundColor: inActiveDotColor,
                                         padding: 4,
                                         width: 5,
                                         borderRadius: 55,
@@ -137,31 +103,33 @@ const imageSlider = ({
     );
 };
 
-export default imageSlider;
+export default ProductimageSlider;
 
 const styles = StyleSheet.create({
     sliderImage: {
-        width: ScreenWidth * 0.96,
+        width: "100%",
         height: "100%",
         resizeMode: "cover",
         marginRight: 2,
+        borderRadius: 8,
     },
     sliderContainer: {
         width: ScreenWidth * 0.96,
-        maxHeight: ScreenHeight * 0.8,
+        maxHeight: ScreenHeight * 0.45,
         overflow: "hidden",
-        marginVertical: hp(2),
+        zIndex: 100,
     },
     pagination: {
         flexDirection: "row",
         position: "absolute",
         bottom: 4,
-        left: "28%",
+        left: "35%",
         alignSelf: "flex-start",
-        backgroundColor: "#ffffff",
+        backgroundColor: Colors.CardBg,
         alignItems: "center",
         justifyContent: "center",
         borderRadius: 55,
         padding: 4,
+        zIndex: 100,
     },
 });

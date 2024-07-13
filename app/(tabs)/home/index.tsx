@@ -1,13 +1,18 @@
-import { View, Text, ScrollView, StyleSheet, Image } from 'react-native'
-import React, { useLayoutEffect } from 'react'
-import { useNavigation } from 'expo-router'
-import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { hp, tintColorLight, wp } from '@/constants';
-import { Bannen, CategorySlider } from '@/components';
-import { SearchBar } from 'react-native-screens';
+import { View, Text, ScrollView, StyleSheet, Image } from 'react-native';
+import React, { useLayoutEffect, useState } from 'react';
+import { useNavigation } from 'expo-router';
+import { AntDesign, Ionicons } from '@expo/vector-icons';
+import { Colors, hp, tintColorLight, wp } from '@/constants';
+import { Banner, CategorySlider, ShopList, SupportModel } from '@/components';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const { banners, shops } = useSelector((state: RootState) => state.main)
+
+  // states 
+  const [modelOpen, setmodelOpen] = useState(false)
 
   // setting some header data 
   useLayoutEffect(() => {
@@ -24,16 +29,22 @@ const HomeScreen = () => {
       headerRight: () => (
         <View style={styles.rightHeader}>
           <Ionicons name='cart-outline' size={28} />
-          <AntDesign name='customerservice' size={28} />
+          <AntDesign name='customerservice' onPress={() => setmodelOpen(prev => !prev)} size={28} />
         </View>
       ),
       headerSearchBarOptions: {
         inputType: "text",
         headerIconColor: tintColorLight,
         shouldShowHintSearchIcon: true,
-        onchange: (e: any) => {
-          console.log("search text", e.nativeEvent.text)
-        }
+        placeholder: 'Search ...',
+        onChangeText: (event: any) => {
+          const query = event.nativeEvent.text;
+          // Add your search logic here
+          console.log(query);
+        },
+        autoCapitalize: 'none',
+        spellCheck: false,
+        autoCorrect: false,
       }
     })
   }, [])
@@ -42,13 +53,14 @@ const HomeScreen = () => {
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} style={styles.maincontainer}>
+      {/* support model  */}
+      <SupportModel isOpen={modelOpen} setOpen={setmodelOpen} email='' phone='' />
       {/* category slider  */}
       <CategorySlider />
       {/* banners  */}
-      <Bannen />
-
+      <Banner images={banners} infinite={true} delay={2500} dotColor={Colors.Primary} />
       {/* recomended shop  */}
-
+      <ShopList title='Recomended Shops' shops={shops} />
       {/* trending products  */}
 
       {/* shop list with search filter  */}
@@ -73,8 +85,8 @@ const styles = StyleSheet.create({
     gap: wp(2)
   },
   nav_logo: {
-    width: wp(10),
-    height: hp(5),
+    width: wp(8),
+    height: hp(4),
     borderRadius: 8
   },
   header_nav_text: {

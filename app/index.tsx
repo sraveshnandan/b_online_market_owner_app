@@ -1,24 +1,34 @@
 import { Loader } from '@/components'
 import { hp, tintColorLight, wp } from '@/constants'
+import { fetchAlldata } from '@/redux/reducers/main.reducers'
+import { RootState } from '@/redux/store'
 import { Redirect } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Image, StyleSheet, Text, View } from 'react-native'
+import Toast from 'react-native-toast-message'
+import { useDispatch, useSelector } from 'react-redux'
 
 const SplashScreen = () => {
-    const [loading, setloading] = useState<boolean>(true);
-    const [isDataLoaded, setisDataLoaded] = useState(false)
+    const dispatch = useDispatch()
+    const { isloading, banners } = useSelector((state: RootState) => state.main)
 
     // final useEffect to run api call to load data
     useEffect(() => {
-        setTimeout(() => {
-            return setloading(false)
-        }, 2000)
+
+        if (!banners.length) {
+            dispatch(fetchAlldata())
+        }
+
+        return () => { }
+
     }, [])
     return (
         <View style={styles.contaner}>
+
+
             <Image style={styles.logo} source={require("../assets/images/icon.png")} alt='logo' />
             {
-                loading ? (<Loader loaderStyle={{ marginVertical: hp(4) }} />) : (
+                isloading ? (<Loader loaderStyle={{ marginVertical: hp(4) }} />) : (
                     <Redirect href={`/(auth)/`} />
                 )
             }
