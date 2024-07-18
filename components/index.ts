@@ -7,4 +7,7 @@ export { default as CategorySlider } from "./shared/CategorySlider";
 export { default as SupportModel } from "./shared/SupportModel";
 export { default as ShopList } from "./shared/ShopList";
 export { default as ProductCard } from "./shared/ProductCard";
+export { default as ProductImageSlider } from "./shared/ProductImageSlider";
 export { default as EmptyAlert } from "./shared/emptyAlert";
+export { default as ShopSearchModel } from "./shared/ShopSearchModel";
+export { default as SignInAlert } from "./shared/SignInAlert";

@@ -1,21 +1,44 @@
 import { View, Text, Image, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { IShop } from '@/types'
 import { hp, wp } from '@/constants'
 import { Ionicons } from '@expo/vector-icons'
 import { router } from 'expo-router'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
+import { addShopToWishlistShop, removeShopToWishlistShop } from '@/redux/reducers/wislistShop.reducers'
+import Toast from 'react-native-toast-message'
 
 type Props = {
-    shop: IShop
+    shop: IShop,
+    setModelState?: Dispatch<SetStateAction<boolean>>
 }
 
-const ShopCard = ({ shop }: Props) => {
+const ShopCard = ({ shop, setModelState }: Props) => {
+    const dispatch = useDispatch()
     const [shopLiked, setshopLiked] = useState<boolean>(false)
+    const { wishlistShop } = useSelector((state: RootState) => state.wishlistShop);
+    const { authState } = useSelector((state: RootState) => state.auth);
 
     const handleBtnPress = () => {
+        if (setModelState) {
+            setModelState(false);
+            return router.push(`/(tabs)/home/shop_details?shopId=${shop._id}&name=${shop.name}`)
+
+        }
         return router.push(`/(tabs)/home/shop_details?shopId=${shop._id}&name=${shop.name}`)
     }
 
+
+
+    useEffect(() => {
+        const isExists = wishlistShop.findIndex(s => s._id === shop._id)
+        if (isExists !== -1) {
+            setshopLiked(true)
+        } else {
+            setshopLiked(false)
+        }
+    }, [wishlistShop.length])
 
     return (
         <View className='bg-white relative p-2 rounded-md items-center mb-4 h-fit '>
@@ -24,7 +47,27 @@ const ShopCard = ({ shop }: Props) => {
 
             <View className='absolute right-6 top-4 z-30 bg-slate-50 rounded-full p-1'>
                 <Ionicons onPress={() => {
-                    setshopLiked(prev => !prev)
+                    if (!authState) {
+                        return Toast.show({
+                            type: "info",
+                            text1: "Unauthorised",
+                            text2: "Please login to perform this operation."
+                        })
+
+                    }
+                    if (shopLiked) {
+                        dispatch(removeShopToWishlistShop({ ...shop }))
+                        return Toast.show({
+                            type: "info",
+                            text1: "Shop removed from your wihlist."
+                        })
+                    } else {
+                        dispatch(addShopToWishlistShop({ ...shop }));
+                        return Toast.show({
+                            type: "success",
+                            text1: "Shop added from your wihlist."
+                        })
+                    }
                 }} color={"red"} name={shopLiked ? "heart-sharp" : "heart-outline"} size={28} />
             </View>
 

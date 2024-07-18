@@ -48,8 +48,8 @@ export interface IUser extends ITimeStamps {
     isAdmin: boolean;
     isShopOwner: boolean;
     referCode: string;
-    referCount: string[];
-    orders: string[];
+    referCount: IUser[];
+    orders: IOrder[];
     cart: string[];
     wishlist: string[];
     address: IAddress[];

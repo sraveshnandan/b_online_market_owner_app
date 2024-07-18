@@ -6,10 +6,10 @@ export default function AuthLayout() {
             animation: "ios",
         }}>
             <Stack.Screen options={{ headerTitle: "Account" }} name="index" />
-            <Stack.Screen name="updateProfile" />
-            <Stack.Screen name="orders" />
-            <Stack.Screen name="wallet" />
-            <Stack.Screen name="refer_earn" />
+            <Stack.Screen name="updateProfile" options={{ headerTitle: "Update your profile" }} />
+            <Stack.Screen name="orders" options={{ headerTitle: "Your Orders" }} />
+            <Stack.Screen name="wallet" options={{ headerTitle: "Your Wallet" }} />
+            <Stack.Screen name="refer_earn" options={{ headerTitle: "Refer & Earn" }} />
         </Stack>
     )
 }

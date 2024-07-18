@@ -1,10 +1,11 @@
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import Animated, { FadeInRight } from 'react-native-reanimated'
 import { hp, wp } from '@/constants'
 import { ICategory } from '@/types'
+import { router } from 'expo-router'
 
 type Props = {
 
@@ -16,10 +17,10 @@ const CategorySlider = (props: Props) => {
     const handlePress = (data: ICategory) => {
         console.log(`${data.name} pressed.`);
 
-        // router navigation added in future 
+        return router.push(`/(screens)/productByCategory?category=${JSON.stringify(data)}`)
     }
     return (
-        <ScrollView horizontal className='my-2' contentContainerStyle={{ gap: wp(4) }} showsHorizontalScrollIndicator={false}>
+        <ScrollView horizontal className={`my-2 ${Platform.OS === "ios" && "pt-16"}`} contentContainerStyle={{ gap: wp(4) }} showsHorizontalScrollIndicator={false}>
 
             {
                 categories.length ? categories.map((item, index) => (

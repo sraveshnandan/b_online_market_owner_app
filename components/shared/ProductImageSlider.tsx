@@ -11,8 +11,8 @@ import {
 
 interface ISliderProps {
     images?: { id?: string; url?: string }[];
-    dotColor?: string | "royalblue";
-    inActiveDotColor?: string | "#222";
+    dotColor?: string | "#ff5226";
+    inActiveDotColor?: string | "#000";
     contentStyle?: ImageStyle;
     containerStyle?: ViewStyle;
 }
@@ -25,7 +25,7 @@ const ProductimageSlider = ({
     contentStyle,
 }: ISliderProps) => {
     const width = ScreenWidth * 0.96;
-    const height = ScreenHeight * 0.4;
+    const height = ScreenHeight * 0.3;
     // Satates
     const [active, setActive] = useState<number>(0);
     const scrollViewRef = useRef<ScrollView | null>(null);
@@ -65,6 +65,7 @@ const ProductimageSlider = ({
                                     {
                                         width: width * 0.996,
                                         height: height,
+                                        borderRadius: 12
                                     },
                                     contentStyle ? contentStyle : null,
                                 ]}
@@ -83,17 +84,17 @@ const ProductimageSlider = ({
                                 index === active
                                     ? {
                                         marginHorizontal: 5,
-                                        backgroundColor: dotColor,
+                                        backgroundColor: dotColor || "#ff5226",
                                         padding: 4,
                                         width: 15,
                                         borderRadius: 55,
                                     }
                                     : {
                                         marginHorizontal: 5,
-                                        backgroundColor: inActiveDotColor,
+                                        backgroundColor: inActiveDotColor || "#000",
                                         padding: 4,
                                         width: 5,
-                                        borderRadius: 55,
+                                        borderRadius: 100,
                                     }
                             }
                         ></View>
@@ -115,9 +116,10 @@ const styles = StyleSheet.create({
     },
     sliderContainer: {
         width: ScreenWidth * 0.96,
-        maxHeight: ScreenHeight * 0.45,
+        height: ScreenHeight * 0.30,
         overflow: "hidden",
         zIndex: 100,
+        marginHorizontal: "auto"
     },
     pagination: {
         flexDirection: "row",

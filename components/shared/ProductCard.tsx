@@ -11,11 +11,15 @@ import React, {
     useLayoutEffect,
     useState,
 } from "react";
-import { Colors } from "@/constants";
+import { Colors, hp, wp } from "@/constants";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { IProduct } from "@/types";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import { addProductToWishlist, removeProductToWishlist } from "@/redux/reducers/wishlist.reducers";
+import { addProductToCart, removeProductToCart } from "@/redux/reducers/cart.reducers";
+import Toast from "react-native-toast-message";
 
 
 type Props = {
@@ -28,22 +32,24 @@ type Props = {
 
 const ProductCard = ({ pr, setShowPrev, setprevImg, cardWidth }: Props) => {
     const dispatch = useDispatch();
-    const cart: any[] = []
-    const wishlist: any[] = []
+    const { cart } = useSelector((state: RootState) => state.cart)
+    const { wishlist } = useSelector((state: RootState) => state.wishlist);
+    const { authState } = useSelector((state: RootState) => state.auth);
+
     // Local state management
     const [liked, setliked] = useState<boolean>(false);
     const [addedToCart, setaddedToCart] = useState<boolean>(false);
     // setting all cart item of wishlist data
     useLayoutEffect(() => {
         // setting liked state
-        const wishlistData = wishlist.findIndex((item) => item.id === pr._id);
+        const wishlistData = wishlist.findIndex((item) => item._id === pr._id);
         if (wishlistData === -1) {
             setliked(false);
         } else {
             setliked(true);
         }
         // setting up cart boolean data
-        const data = cart.findIndex((item) => item.product.id === pr._id);
+        const data = cart.findIndex((item) => item.product._id === pr._id);
         if (data === -1) {
             setaddedToCart(false);
         } else {
@@ -55,7 +61,7 @@ const ProductCard = ({ pr, setShowPrev, setprevImg, cardWidth }: Props) => {
     return (
         <View
             style={[cardWidth ? { width: cardWidth } : null]}
-            className="w-[45%] items-center overflow-hidden rounded-md bg-white h-[220] m-2 p-1"
+            className="w-[48%] items-center overflow-hidden rounded-md bg-white h-fit m-1 p-1"
         >
             {/* Product CTA Action  */}
             <View
@@ -67,15 +73,38 @@ const ProductCard = ({ pr, setShowPrev, setprevImg, cardWidth }: Props) => {
                     paddingLeft: 8,
                 }}
             >
-                <Ionicons
-                    name={liked ? "heart-sharp" : "heart-outline"}
-                    size={28}
-                    color={Colors.Red}
-                    onPress={() => {
+                <View className="absolute top-2 right-2 z-50 bg-white rounded-md p-1 shadow-lg shadow-black">
+                    <Ionicons
+                        name={liked ? "heart-sharp" : "heart-outline"}
+                        size={28}
+                        color={"red"}
+                        onPress={() => {
+                            if (!authState) {
+                                return Toast.show({
+                                    type: "info",
+                                    text1: "Unauthorised",
+                                    text2: "Please login to perform this operation."
+                                })
 
-                        setliked((prev) => !prev);
-                    }}
-                />
+                            }
+                            if (liked) {
+                                dispatch(removeProductToWishlist({ ...pr }))
+                                setliked((prev) => !prev);
+                                return Toast.show({
+                                    type: "info",
+                                    text1: "Product removed from your wihlist."
+                                })
+                            } else {
+                                dispatch(addProductToWishlist({ ...pr }))
+                                setliked((prev) => !prev);
+                                return Toast.show({
+                                    type: "success",
+                                    text1: "Product added to your wihlist."
+                                })
+                            }
+                        }}
+                    />
+                </View>
             </View>
 
             {/* product Image  */}
@@ -87,14 +116,16 @@ const ProductCard = ({ pr, setShowPrev, setprevImg, cardWidth }: Props) => {
                     }
                     return;
                 }}
-                style={{ width: 120, height: 120 }}
+                style={{ width: 150, height: 150 }}
             >
                 <Image
                     style={{
                         width: "100%",
                         height: "100%",
-                        resizeMode: "contain",
+                        resizeMode: "cover",
                         backfaceVisibility: "visible",
+                        borderRadius: 12,
+                        marginVertical: 4
                     }}
                     source={{ uri: pr?.banners[0].url }}
                 />
@@ -102,14 +133,14 @@ const ProductCard = ({ pr, setShowPrev, setprevImg, cardWidth }: Props) => {
 
             {/* Product Details  */}
             <TouchableOpacity
-                style={{ width: "100%", position: "absolute", bottom: 0 }}
+                style={{ width: "100%", marginTop: 8, paddingHorizontal: 4 }}
                 onPress={() => {
                     router.push(`/(screens)/ProductDetails?product_id=${pr._id}` as any);
                 }}
             >
                 {/* Product Title  */}
                 <Text style={{ fontSize: 20, textAlign: "left" }}>
-                    {pr?.name?.substring(0, 10)}...
+                    {pr?.name?.substring(0, 20)}...
                 </Text>
 
                 {/* Product Price Section  */}
@@ -150,12 +181,22 @@ const ProductCard = ({ pr, setShowPrev, setprevImg, cardWidth }: Props) => {
                     addedToCart ? { backgroundColor: "green" } : null,
                 ]}
                 onPress={() => {
-                    if (addedToCart) {
+                    if (!authState) {
+                        return Toast.show({
+                            type: "info",
+                            text1: "Unauthorised",
+                            text2: "Please login to perform this operation."
+                        })
+
+                    }
+                    if (!addedToCart) {
                         // dispatch event 
-                        setaddedToCart((prev) => !prev);
+                        dispatch(addProductToCart({ ...pr }))
+                        setaddedToCart(true);
                     } else {
                         // dispatch event 
-                        setaddedToCart((prev) => !prev);
+                        dispatch(removeProductToCart({ ...pr }))
+                        setaddedToCart(false);
                     }
                 }}
             >

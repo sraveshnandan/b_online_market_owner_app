@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { ICategory } from '@/types'
 import { tintColorLight, wp } from '@/constants'
-import { useNavigation } from 'expo-router'
+import { router, useNavigation } from 'expo-router'
 
 const CategoryScreen = () => {
 
@@ -43,7 +43,7 @@ const CategoryScreen = () => {
 
     // handling category button press 
     const handlePress = (data: ICategory) => {
-
+        return router.push(`/(screens)/productByCategory?category=${JSON.stringify(data)}`)
     }
 
 

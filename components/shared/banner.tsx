@@ -97,11 +97,11 @@ const imageSlider = ({
                                     {
                                         width: width,
                                         height: height * 0.9,
+                                        resizeMode: "stretch"
 
                                     },
                                     contentStyle ? contentStyle : null,
                                 ]}
-                                resizeMethod="auto"
                                 className="rounded-lg shadow-lg object-fill"
                                 source={{ uri: item.image?.url }}
                             />

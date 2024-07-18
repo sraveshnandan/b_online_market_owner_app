@@ -8,7 +8,8 @@ import { API } from '@/utils'
 import { router } from 'expo-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { login, setLoading } from '@/redux/reducers/auth.reducer'
-import { RootState } from '@/redux/store'
+import { RootState } from '@/redux/store';
+import * as Linking from "expo-linking"
 
 type Props = {}
 
@@ -49,9 +50,8 @@ const MobileNumberScreen = (props: Props) => {
         });
         if (res.data.account_status === "registred") {
             setisRegistred(true)
-            setmodelOpen(true)
-
         }
+        setmodelOpen(true)
 
 
     }
@@ -69,17 +69,16 @@ const MobileNumberScreen = (props: Props) => {
 
         if (isRegistred) {
             // login fn 
-            console.log("login");
+            console.log("login initiated")
             dispatch(setLoading(true))
-            dispatch(login({ phone_no: phone, otp: userOtp }))
+            dispatch(login({ phone_no: phone, otp: userOtp }) as any)
+
             if (userData.full_name) {
                 return router.replace(`/(tabs)/home/`)
             }
 
-
-
         } else {
-            return router.replace(`/(auth)/register`)
+            return router.replace(`/(auth)/register?phone=${phone}`)
         }
     }
 
@@ -97,6 +96,9 @@ const MobileNumberScreen = (props: Props) => {
     return (
         <SafeAreaView style={styles.container} >
 
+            {/* skip button  */}
+
+            <Text onPress={() => router.replace(`/(tabs)/home/`)} className='text-primary text-xl font-semibold absolute top-12 right-4'>Skip</Text>
             {/* otp model  */}
 
             <Modal visible={modelOpen}>
@@ -136,6 +138,15 @@ const MobileNumberScreen = (props: Props) => {
                     <Text className='text-white text-2xl text-center'>{isLoading ? "Please wait..." : "Continue"}</Text>
                 </TouchableOpacity>
             </KeyboardAvoidingView>
+
+
+            <View style={{marginBottom:hp(10)}} className='flex-grow items-end justify-end'>
+
+                <TouchableOpacity onPress={() => Linking.openURL("https://xecurecode.tech")} className='flex-row items-center justify-center w-full '>
+                    <Text className='text-lg  text-gray-500 font-semibold'>Powerd by</Text>
+                    <Text className='text-lg  ml-2 text-primary font-semibold'>XecureCode</Text>
+                </TouchableOpacity>
+            </View>
 
         </SafeAreaView>
     )

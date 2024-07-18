@@ -1,5 +1,5 @@
 
-
+import "react-native-gesture-handler"
 import { persistor, store } from "@/redux/store";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";

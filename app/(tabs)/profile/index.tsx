@@ -1,22 +1,42 @@
-import { View, Text, ScrollView, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { useSelector } from 'react-redux'
+import { View, Text, ScrollView, Image, TouchableOpacity, RefreshControl } from 'react-native'
+import React, { useCallback, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { APP_VERSION, Colors, hp, ProfileMenu, wp } from '@/constants'
+import { APP_VERSION, Colors, ProfileMenu } from '@/constants'
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { router } from 'expo-router'
+import { fetchUserProfile, logout } from '@/redux/reducers/auth.reducer'
+import { SignInAlert } from '@/components';
+import * as Linking from "expo-linking"
 
 const ProfileScreen = () => {
+    const dispatch = useDispatch()
+    const { userData, authToken, isLoading, authState } = useSelector((state: RootState) => state.auth);
+    const [refreshing, setrefreshing] = useState(false);
 
-    const { userData, authToken } = useSelector((state: RootState) => state.auth);
 
+
+    // refresh handler 
+
+    const onRefresh = useCallback(() => {
+        setrefreshing(true);
+        dispatch(fetchUserProfile({ token: authToken }) as any)
+        if (!isLoading) {
+            return setrefreshing(false)
+        }
+    }, [])
 
     // handling log out fn 
     const logoutHandler = () => {
-        console.log("log out clicked.")
+        console.log("log out clicked.");
+        dispatch(logout({}));
+        return router.replace(`/(auth)/`)
+
     }
-    return (
-        <ScrollView className='flex-1' showsVerticalScrollIndicator={false}>
+    return !authState ? (
+        <SignInAlert />
+    ) : (
+        <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} className='flex-1' showsVerticalScrollIndicator={false}>
             {/* user profile details  */}
 
             <View className='bg-white items-center justify-center w-[95%] rounded-md p-2 mx-auto mt-2 mb-4'>
@@ -70,7 +90,7 @@ const ProfileScreen = () => {
             <Text className='text-xl font-semibold text-gray-500 text-center my-4'>App Version: {APP_VERSION}</Text>
 
             {/* copyright section  */}
-            <TouchableOpacity onPress={() => { }} className='flex-row items-center justify-center w-full '>
+            <TouchableOpacity onPress={() => Linking.openURL("https://xecurecode.tech")} className='flex-row items-center justify-center w-full '>
                 <Text className='text-lg  text-gray-500 font-semibold'>Powerd by</Text>
                 <Text className='text-lg  ml-2 text-primary font-semibold'>XecureCode</Text>
             </TouchableOpacity>

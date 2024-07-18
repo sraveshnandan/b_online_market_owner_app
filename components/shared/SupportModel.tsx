@@ -5,7 +5,7 @@ import { Colors } from '@/constants'
 
 type Props = {
     email: string,
-    phone: string,
+    phone: string | any,
     isOpen: boolean,
     setOpen: Dispatch<SetStateAction<boolean>>
 }

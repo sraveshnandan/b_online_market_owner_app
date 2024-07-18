@@ -1,10 +1,12 @@
 
-import { Colors, tintColorLight } from "@/constants"
+import { Colors, hp, tintColorLight } from "@/constants"
+import { RootState } from "@/redux/store"
 import { AntDesign, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons"
 import { Tabs } from "expo-router"
+import { useSelector } from "react-redux"
 export default function AuthLayout() {
-    const wishlistProduct = ["ww", "ss"]
-    const wishlistShop = [22, 22]
+    const { wishlist } = useSelector((state: RootState) => state.wishlist);
+    const { wishlistShop } = useSelector((state: RootState) => state.wishlistShop);
     return (
         <Tabs screenOptions={{ headerShown: false, tabBarHideOnKeyboard: true, tabBarActiveTintColor: tintColorLight, tabBarInactiveTintColor: Colors.Gray }}>
 
@@ -13,7 +15,11 @@ export default function AuthLayout() {
                 tabBarIcon: ({ color, focused }) => (
                     <MaterialCommunityIcons name={focused ? "home" : "home-outline"} color={color} size={34} />
                 ),
-                tabBarShowLabel: false
+                tabBarLabel: "Home",
+                tabBarLabelStyle: {
+                    fontWeight: "800",
+                    fontSize: 10
+                }
             }} />
 
             {/* category tab  */}
@@ -21,7 +27,11 @@ export default function AuthLayout() {
                 tabBarIcon: ({ color, focused }) => (
                     <Ionicons name={focused ? "logo-buffer" : "logo-buffer"} color={color} size={28} />
                 ),
-                tabBarShowLabel: false
+                tabBarLabel: "Category",
+                tabBarLabelStyle: {
+                    fontWeight: "800",
+                    fontSize: 10
+                }
             }} />
 
 
@@ -30,12 +40,16 @@ export default function AuthLayout() {
                 tabBarIcon: ({ color, focused }) => (
                     <Ionicons name={focused ? "heart-sharp" : "heart-outline"} color={color} size={28} />
                 ),
-                tabBarShowLabel: false,
-                tabBarBadge: wishlistProduct.length + wishlistShop.length,
+                tabBarLabel: "Wishlit",
+                tabBarBadge: wishlist.length + wishlistShop.length,
                 tabBarBadgeStyle: {
-                    display: wishlistProduct.length || wishlistShop.length ? "flex" : "none",
+                    display: wishlist.length ?? wishlistShop.length ? "flex" : "none",
                     alignItems: "center",
                     justifyContent: "center"
+                },
+                tabBarLabelStyle: {
+                    fontWeight: "800",
+                    fontSize: 10
                 }
             }} />
 
@@ -44,7 +58,11 @@ export default function AuthLayout() {
                 tabBarIcon: ({ color, focused }) => (
                     <Ionicons name={focused ? "person-sharp" : "person-outline"} color={color} size={28} />
                 ),
-                tabBarShowLabel: false
+                tabBarLabel: "Profile",
+                tabBarLabelStyle: {
+                    fontWeight: "800",
+                    fontSize: 10
+                }
             }} />
 
         </Tabs>

@@ -47,7 +47,10 @@ const mainSlice = createSlice({
     name: "main",
     initialState,
     reducers: {
-
+        // adding new order to storage 
+        addNewOrder: (state, action) => {
+            state.orders.push(action.payload)
+        }
     },
     extraReducers: builder => {
         // pending case 
@@ -77,6 +80,8 @@ const mainSlice = createSlice({
     }
 })
 
-export default mainSlice.reducer
+export default mainSlice.reducer;
+
+export const { addNewOrder } = mainSlice.actions
 
 export { fetchAlldata }
