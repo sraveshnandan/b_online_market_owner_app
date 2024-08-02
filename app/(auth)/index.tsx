@@ -1,4 +1,4 @@
-import { Text, StyleSheet, KeyboardAvoidingView, TextInput, View, TouchableOpacity, Alert, ToastAndroid, Modal } from 'react-native'
+import { Text, StyleSheet, KeyboardAvoidingView, TextInput, View, TouchableOpacity, ToastAndroid, Modal } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Colors, hp, wp } from '@/constants'
@@ -7,8 +7,8 @@ import Toast from 'react-native-toast-message'
 import { API } from '@/utils'
 import { router } from 'expo-router'
 import { useDispatch, useSelector } from 'react-redux'
-import { login, setLoading } from '@/redux/reducers/auth.reducer'
-import { RootState } from '@/redux/store';
+import { fetchUserProfile, loginUser, setLoading } from '@/redux/reducers/auth.reducer'
+import { RootState } from '@/redux/store'
 import * as Linking from "expo-linking"
 
 type Props = {}
@@ -38,26 +38,35 @@ const MobileNumberScreen = (props: Props) => {
             });
         }
         dispatch(setLoading(true))
+        try {
 
-        const res = await API.post("SendOtp", { mobile_no: phone });
-
-        dispatch(setLoading(false))
-        console.log(res.data);
-        setotpResponse(res.data)
-        Toast.show({
-            type: 'success',
-            text1: 'OTP sent successfully.',
-        });
-        if (res.data.account_status === "registred") {
-            setisRegistred(true)
+            const res = await API.post("SendOtp", { mobile_no: phone });
+            console.log(res.data);
+            setotpResponse(res.data)
+            Toast.show({
+                type: 'success',
+                text1: 'OTP sent successfully.',
+            });
+            if (res.data.account_status === "registred") {
+                setisRegistred(true)
+            }
+            setmodelOpen(true)
+        } catch (error) {
+            console.log("unable to send otp now.");
+            return Toast.show({
+                type: "error",
+                text1: "Something went wrong.",
+                text2: "Unable to send otp  now , please try again later."
+            })
+        } finally {
+            dispatch(setLoading(false))
         }
-        setmodelOpen(true)
 
 
     }
     // handling otp verify fn 
 
-    const verifyOtp = () => {
+    const verifyOtp = async () => {
         // checking otp length 
         if (userOtp.length < 6) {
             return ToastAndroid.show("OTP to short.", 1000)
@@ -70,12 +79,46 @@ const MobileNumberScreen = (props: Props) => {
         if (isRegistred) {
             // login fn 
             console.log("login initiated")
-            dispatch(setLoading(true))
-            dispatch(login({ phone_no: phone, otp: userOtp }) as any)
+            try {
+                dispatch(setLoading(true));
 
-            if (userData.full_name) {
+                const resp = await fetch("https://bom-api-1-0-1.onrender.com/api/v1/user/login", {
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    method: "POST",
+                    body: JSON.stringify({ phone_no: phone, otp: userOtp })
+                })
+                const loginRes = await resp.json()
+
+                dispatch(loginUser(loginRes));
+                dispatch(fetchUserProfile({ token: loginRes.token }) as any)
+
+                if (!loginRes.user.isShopOwner) {
+                    return router.push(`/(auth)/startBusiness`)
+                }
+
+                Toast.show({
+                    type: "success",
+                    text1: "Logged in successfully."
+                });
+
+
                 return router.replace(`/(tabs)/home/`)
+
+
+            } catch (error) {
+                console.log("err while login fn init.", error)
+                return Toast.show({
+                    type: "error",
+                    text1: "Something went wrong.",
+                    text2: "Unable to proceed your request."
+                })
+            } finally {
+                dispatch(setLoading(false))
             }
+
+
 
         } else {
             return router.replace(`/(auth)/register?phone=${phone}`)
@@ -87,18 +130,15 @@ const MobileNumberScreen = (props: Props) => {
 
 
     useEffect(() => {
-        dispatch(setLoading(false))
-        if (userData.full_name) {
+        dispatch(setLoading(false));
+        if (userData._id) {
             return router.replace(`/(tabs)/home/`)
         }
     }, [])
 
+
     return (
         <SafeAreaView style={styles.container} >
-
-            {/* skip button  */}
-
-            <Text onPress={() => router.replace(`/(tabs)/home/`)} className='text-primary text-xl font-semibold absolute top-12 right-4'>Skip</Text>
             {/* otp model  */}
 
             <Modal visible={modelOpen}>
@@ -129,7 +169,7 @@ const MobileNumberScreen = (props: Props) => {
             <KeyboardAvoidingView>
                 <View className='bg-gray-200 flex-row  rounded-md items-center w-full my-4 p-2'>
                     <Ionicons name='call' size={20} color={Colors.Primary} />
-                    <TextInput maxLength={10} onChangeText={setphone} className='text-2xl ml-2 flex-grow font-semibold p-2' keyboardType='number-pad' placeholder='Enter your phone number'
+                    <TextInput value={phone} maxLength={10} onChangeText={setphone} className='text-2xl ml-2 flex-grow font-semibold p-2' keyboardType='number-pad' placeholder='Enter your phone number'
                     />
                     {phone.length > 0 && <Ionicons onPress={() => { setphone("") }} name='close' size={20} color={"red"} />}
                 </View>
@@ -140,7 +180,7 @@ const MobileNumberScreen = (props: Props) => {
             </KeyboardAvoidingView>
 
 
-            <View style={{marginBottom:hp(10)}} className='flex-grow items-end justify-end'>
+            <View style={{ marginBottom: hp(10) }} className='flex-grow items-end justify-end'>
 
                 <TouchableOpacity onPress={() => Linking.openURL("https://xecurecode.tech")} className='flex-row items-center justify-center w-full '>
                     <Text className='text-lg  text-gray-500 font-semibold'>Powerd by</Text>

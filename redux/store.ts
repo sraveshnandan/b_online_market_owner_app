@@ -3,34 +3,32 @@ import mainReducers from "./reducers/main.reducers"
 import authReducer from "./reducers/auth.reducer"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { persistReducer, persistStore } from "redux-persist"
-import cartReducers from "./reducers/cart.reducers"
-import wishlistReducers from "./reducers/wishlist.reducers"
-import wislistShopReducers from "./reducers/wislistShop.reducers"
-
-
-
 
 const Reducers = combineReducers({
     main: mainReducers,
     auth: authReducer,
-    cart: cartReducers,
-    wishlist: wishlistReducers,
-    wishlistShop: wislistShopReducers
+
 })
 
 const PersistConfig = {
     key: "root",
     storage: AsyncStorage,
-    whitelist: ["main", "auth", "cart", "wishlist", "wishlistShop"]
+    whitelist: ["main", "auth"]
 }
 
 const persistedReducers = persistReducer(PersistConfig, Reducers)
 
-
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 const store = configureStore({
     reducer: persistedReducers,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false, })
+    middleware: (getDefaultMiddleware) => {
+        const middlewares = getDefaultMiddleware({
+            serializableCheck: false,
+            immutableCheck: isDevelopment ? { warnAfter: 994 } : false,
+        });
+        return middlewares;
+    },
 })
 
 const persistor = persistStore(store)

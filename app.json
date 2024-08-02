@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "B Online Market",
-    "slug": "b_online_market",
-    "version": "1.0.0",
+    "name": "B Online Market Owner",
+    "slug": "b_online_owner",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -20,12 +20,13 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.sravesh.bom"
+      "package": "com.sravesh.bomo",
+      "versionCode": 2
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/icon.png"
     },
     "plugins": [
       "expo-router",
@@ -34,7 +35,8 @@
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": false
@@ -42,9 +44,6 @@
     "extra": {
       "router": {
         "origin": false
-      },
-      "eas": {
-        "projectId": "ed4a9063-87a1-44ea-914c-8c2a26e106d9"
       }
     }
   }

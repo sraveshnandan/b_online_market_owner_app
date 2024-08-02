@@ -5,7 +5,7 @@ import { API_URL, hp } from '@/constants'
 import { router, useLocalSearchParams } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
 import Toast from 'react-native-toast-message'
-import { registerUser } from '@/redux/reducers/auth.reducer'
+import { fetchUserProfile, registerUser } from '@/redux/reducers/auth.reducer'
 
 const RegisterScreen = () => {
     const dispatch = useDispatch();
@@ -56,11 +56,16 @@ const RegisterScreen = () => {
             setloading(false);
             if (data.success) {
                 console.log("data.success", data)
+                dispatch(fetchUserProfile({ token: data.token }) as any)
                 dispatch(registerUser({ ...data }));
                 Toast.show({
                     type: "success",
                     text1: "Account created successfully."
                 })
+                if (!data.user.isShopOwner) {
+                    return router.replace(`/(auth)/startBusiness`)
+
+                }
 
                 return router.replace("/(tabs)/home/")
 

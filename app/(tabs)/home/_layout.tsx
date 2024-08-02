@@ -5,7 +5,7 @@ export default function AuthLayout() {
     return (
         <Stack screenOptions={{ animation: "ios" }}>
             <Stack.Screen name="index" />
-            <Stack.Screen name="shop_details" />
+
         </Stack>
     )
 }

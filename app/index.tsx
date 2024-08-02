@@ -1,21 +1,25 @@
-import { Loader } from '@/components'
-import { hp, tintColorLight, wp } from '@/constants'
+import { Colors, hp, tintColorLight, wp } from '@/constants'
+import { fetchUserProfile } from '@/redux/reducers/auth.reducer'
 import { fetchAlldata } from '@/redux/reducers/main.reducers'
 import { RootState } from '@/redux/store'
 import { Redirect } from 'expo-router'
 import { useEffect } from 'react'
-import { Image, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
 const SplashScreen = () => {
     const dispatch = useDispatch()
-    const { isloading, banners, orders, isError, errMessage } = useSelector((state: RootState) => state.main)
+    const { isloading, orders, isError } = useSelector((state: RootState) => state.main)
+    const { authToken, authState } = useSelector((state: RootState) => state.auth)
 
     // final useEffect to run api call to load data
     useEffect(() => {
 
-        if (!banners.length) {
+
+        if (authState) {
             dispatch(fetchAlldata() as any)
+            dispatch(fetchUserProfile({ token: authToken }) as any)
+
         }
 
         return () => { }
@@ -26,7 +30,10 @@ const SplashScreen = () => {
 
             <Image style={styles.logo} source={require("../assets/images/icon.png")} alt='logo' />
             {
-                isloading ? (<Loader loaderStyle={{ marginVertical: hp(4) }} />) : isError ? (<View></View>) : (
+                isloading ? (<View className='mt-2'>
+                    <ActivityIndicator size={"large"} color={Colors.Primary} /></View>) : isError ? (
+                        <></>
+                    ) : (
                     <Redirect href={`/(auth)/`} />
                 )
             }

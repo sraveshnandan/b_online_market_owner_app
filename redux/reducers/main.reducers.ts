@@ -1,4 +1,4 @@
-import { IBanners, ICategory, IOrder, IProduct, IShop } from "@/types";
+import { ICategory, IOrder, IProduct, IShop } from "@/types";
 import { API } from "@/utils";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
@@ -9,11 +9,11 @@ interface IinitialState {
     isError: boolean,
     errMessage: string,
     isSuccess: boolean,
-    shops: IShop[],
-    products: IProduct[],
     orders: IOrder[],
-    categories: ICategory[],
-    banners: IBanners[]
+    products: IProduct[],
+    shops: IShop[],
+    categories: ICategory[]
+
 
 }
 const initialState: IinitialState = {
@@ -21,11 +21,11 @@ const initialState: IinitialState = {
     isError: false,
     errMessage: "",
     isSuccess: false,
-    shops: [],
     products: [],
     orders: [],
-    categories: [],
-    banners: []
+    shops: [],
+    categories: []
+
 }
 
 
@@ -50,6 +50,28 @@ const mainSlice = createSlice({
         // adding new order to storage 
         addNewOrder: (state, action) => {
             state.orders.push(action.payload)
+        },
+        addOrUpdateProducts: (state, action) => {
+            const isExists = state.products.findIndex(p => p._id.toString() === action.payload._id.toString());
+
+            if (isExists) {
+                state.products[isExists] = action.payload
+            }
+            state.products.push(action.payload)
+        },
+        removeProduct: (state, action) => {
+            const productIndex = state.products.findIndex(p => p._id.toString() === action.payload._id.toString());
+            if (productIndex !== -1) {
+                state.products.splice(productIndex, 1)
+            }
+        },
+        clearAllData: (state) => {
+            state.categories = [];
+            state.orders = [];
+            state.shops = [];
+            state.products = [];
+
+
         }
     },
     extraReducers: builder => {
@@ -62,13 +84,11 @@ const mainSlice = createSlice({
         builder.addCase(fetchAlldata.fulfilled, (state, action) => {
             state.isloading = false;
             console.log("fetchAllData fullfilled");
-            const { banners, categories, shops, orders, products } = action.payload.result
-            state.banners = banners
-            state.categories = categories
-            state.shops = shops;
+            const { orders, products, shops, categories } = action.payload.result
             state.orders = orders;
-            state.products = products
-
+            state.products = products;
+            state.shops = shops;
+            state.categories = categories;
         })
 
         // error case 
@@ -82,6 +102,6 @@ const mainSlice = createSlice({
 
 export default mainSlice.reducer;
 
-export const { addNewOrder } = mainSlice.actions
+export const { addNewOrder, addOrUpdateProducts, clearAllData, removeProduct } = mainSlice.actions
 
 export { fetchAlldata }

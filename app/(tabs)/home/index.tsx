@@ -1,28 +1,22 @@
-import { View, Text, ScrollView, StyleSheet, Image, RefreshControl } from 'react-native';
-import React, { useCallback, useLayoutEffect, useState } from 'react';
+import { View, Text, ScrollView, StyleSheet, Image, RefreshControl, TouchableOpacity } from 'react-native';
+import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { router, useNavigation } from 'expo-router';
-import { AntDesign, Ionicons } from '@expo/vector-icons';
-import { Colors, hp, tintColorLight, wp } from '@/constants';
-import { Banner, CategorySlider, ProductCard, ShopList, ShopSearchModel, SupportModel } from '@/components';
+import { Colors, hp, ShopMenu, wp } from '@/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { fetchUserProfile, logout } from '@/redux/reducers/auth.reducer';
+import Toast from 'react-native-toast-message';
+import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { fetchAlldata } from '@/redux/reducers/main.reducers';
-import { IShop } from '@/types';
-import ShopCard from '@/components/shared/ShopCard';
+import Animated, { FadeInDown } from 'react-native-reanimated';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch()
-  const { banners, shops, products } = useSelector((state: RootState) => state.main);
-  const { userData, authState } = useSelector((state: RootState) => state.auth);
-  const { cart } = useSelector((state: RootState) => state.cart)
+  const { userData, authToken, userShop } = useSelector((state: RootState) => state.auth);
   const [refreshing, setrefreshing] = useState(false);
-  const [recomendedShop, setrecomendedShop] = useState<IShop[]>(shops.filter(s => s.pin_code === Number(userData.pin_code)));
 
   // states 
-  const [modelOpen, setmodelOpen] = useState(false);
-  const [shopModeOpen, setshopModeOpen] = useState(false)
-
 
   // setting some header data 
   useLayoutEffect(() => {
@@ -32,29 +26,29 @@ const HomeScreen = () => {
       headerLeft: () => (
         <View style={styles.left_nav_container}>
           <Image style={styles.nav_logo} source={require("../../../assets/images/icon.png")} />
-          <Text style={styles.header_nav_text}>Online Market</Text>
+          {userShop && (<Text style={styles.header_nav_text}>{userShop && userShop.name.length > 26 ? `${userShop.name.substring(0, 26)}...` : userShop.name}</Text>)}
         </View>
       ),
       // // headerRightSection 
       headerRight: () => (
         <View style={styles.rightHeader}>
-          <View className='p-2'>
-            {
-              cart.length > 0 && (
-                <View className='bg-red-600 items-center top-0   w-5 h-5 z-50 right-0  rounded-full justify-center absolute '>
-                  <Text className="text-white text-xsm font-semibold ">{cart.length}</Text>
-                </View>
-              )
-            }
-            <Ionicons onPress={() => router.push("/(screens)/cart")} name='cart-outline' size={28} />
-          </View>
-          <AntDesign name='customerservice' onPress={() => setmodelOpen(prev => !prev)} size={28} />
-          <AntDesign name='search1' onPress={() => setshopModeOpen(prev => !prev)} size={28} color={Colors.Primary} />
+          <AntDesign name='customerservice' size={29} color={Colors.Primary} />
         </View>
       ),
 
-    })
-  }, [cart.length])
+    });
+
+  }, [])
+
+
+  // checking if user has any shop 
+
+  useEffect(() => {
+    if (!userData.isShopOwner) {
+      return router.replace(`/(auth)/startBusiness`)
+    }
+  }, [])
+
 
 
 
@@ -63,66 +57,72 @@ const HomeScreen = () => {
 
   // handling refress controll 
 
-  const onRefress = useCallback(() => {
+  const onRefress = async () => {
+    setrefreshing(true)
+    try {
+      dispatch(fetchAlldata() as any)
+      dispatch(fetchUserProfile({ token: authToken }) as any)
+    } catch (error) {
+      return Toast.show({
+        type: "error",
+        text1: "Something wnet wrong.",
+        text2: "Please check your internet connection."
+      })
+    } finally {
+      setrefreshing(false)
+    }
 
-    setrefreshing(true);
-    dispatch(fetchAlldata() as any);
-    setrefreshing(false)
 
+  }
 
-  }, [])
-
-
-  console.log(recomendedShop.length)
-
-
-  return (
+  return userData.isShopOwner && userShop.address && (
     <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefress} />} showsVerticalScrollIndicator={false} style={styles.maincontainer}>
       {/* support model  */}
-      <SupportModel isOpen={modelOpen} setOpen={setmodelOpen} email='' phone='' />
 
-      {/* shop search model  */}
-      <ShopSearchModel isOpen={shopModeOpen} setIsopen={setshopModeOpen} />
-      {/* category slider  */}
-      <CategorySlider />
-      {/* banners  */}
-      <Banner images={banners} infinite={true} delay={2500} dotColor={Colors.Primary} />
-      {
-        authState && (
-          <>
-            {/* recomended shop  */}
-            <ShopList title='Recomended Shops' shops={recomendedShop} />
-          </>
-        )
-      }
-      {/* trending products  */}
-      <Text className='text-xl border-b-2 border-b-primary mx-auto border-x-white pb-2 font-semibold text-center mb-4'>Trending products</Text>
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} className='w-full p-2 mb-8'>
-        {products.map((item, index) => <View style={{ width: wp(50), marginHorizontal: 10 }}>
-          {/* indicator  */}
-          <View className='bg-green-500 p-2 shadow-lg shadow-black absolute flex-row items-center z-50 rounded-md'>
-            <Ionicons name='trending-up-outline' size={22} color={"#fff"} />
-            <Text className='text-sm text-white font-semibold ml-2'>Trending</Text>
+      {/* shop info */}
+      <View style={{ height: hp(45) }} className='relative   h-fit'>
+        <View style={{ height: hp(30) }} className='w-[98%] rounded-md overflow-hidden  mx-auto '>
+          {userShop.banners.length && (
+            <Image source={{ uri: userShop?.banners[0].url }} width={100} height={100} className='w-full h-full object-cover' />
+          )}
+
+        </View>
+        {/* infocard  */}
+
+        <Animated.View entering={FadeInDown.delay(500).springify()} style={{ height: hp(16) }} className='w-[85%] items-center  shadow-lg shadow-black relative -top-12  z-50 mx-auto p-3 bg-primary rounded-md'>
+          <Text className='text-white text-xl '>{userShop.name}
+          </Text>
+
+          <View className='flex-row items-center mt-2 '>
+            <Ionicons name='location' color={"#fff"} size={18} />
+            <Text className='text-white ml-2 opacity-75'>{userShop.address.substring(0, 50)}...</Text>
           </View>
-          <ProductCard cardWidth={"100%"} pr={item} key={index} /></View>)}
-      </ScrollView>
-      {/* shop list with search filter  */}
 
-      {/* trending products  */}
-      <Text className='text-xl border-b-2 border-b-primary pb-2 border-x-white mx-auto font-semibold text-center mb-4'>All Shops</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} className='w-full  mb-8'>
-        {shops.map((item, index) =>
-          <View style={{ width: wp(100), }}>
-            {/* indicator  */}
-            <View className='bg-green-500 p-2 shadow-lg shadow-black absolute flex-row items-center z-50 rounded-md'>
-              <Ionicons name='trending-up-outline' size={22} color={"#fff"} />
-              <Text className='text-sm text-white font-semibold ml-2'>Trending</Text>
-            </View>
-            <ShopCard shop={item} key={index} />
+          <View className='flex-row items-center mt-2 '>
+            <Ionicons name='call-sharp' color={"#fff"} size={18} />
+            <Text className='text-white ml-2 opacity-75'>+91 {userData.phone_no}</Text>
           </View>
-        )}
-      </ScrollView>
+
+          <View className='flex-row items-center mt-2 '>
+            <Ionicons name='calendar' color={"#fff"} size={18} />
+            <Text className='text-white ml-2 opacity-75'> {new Date(userShop.createdAt).toDateString()}</Text>
+          </View>
+
+        </Animated.View>
+      </View>
+
+      <Text className='text-primary text-2xl font-semibold text-center my-2'>Manage your shop</Text>
+
+      <View className='flex-row flex-wrap items-center h-fit justify-center '>
+        {ShopMenu.map((item, index) => (
+          <TouchableOpacity onPress={() => router.push(item.link)} style={{ height: hp(10) }} key={index} className='items-center justify-center bg-white m-2 p-2 rounded-md shadow-lg shadow-black w-[28%]'>
+            <MaterialCommunityIcons name={item.icon as any} size={30} color={Colors.Primary} />
+            <Text className='text-md font-semibold text-primary mt-2'>{item.name}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
 
     </ScrollView>
   )
