@@ -138,10 +138,10 @@ const products = () => {
                             {/* Action section  */}
 
 
-                            <View className='bg-gray-200 p-2  justify-between rounded-lg  absolute z-50 bottom-2 right-2 flex-row items-center'>
+                            <View className='bg-gray-200 p-2  justify-between rounded-lg  absolute z-50 bottom-1 right-2 flex-row items-center'>
                                 {/* <MaterialCommunityIcons onPress={() => handleProductEdit(item)} name='pencil-box' size={30} color={"green"} /> */}
 
-                                <MaterialCommunityIcons onPress={() => handleProductDelete(item)} name='trash-can' size={30} color={"red"} />
+                                <MaterialCommunityIcons onPress={() => handleProductDelete(item)} name='trash-can' size={20} color={"red"} />
                             </View>
                             {/* product image  */}
                             <View className='w-[50%] h-full'>
@@ -150,13 +150,13 @@ const products = () => {
 
 
                             <View className=' px-2 h-full flex-grow overflow-hidden  '>
-                                <Text className='text-2xl font-semibold text-primary'>{item.name.substring(0, 10)}..</Text>
+                                <Text className='text-xl font-medium text-primary'>{item.name.substring(0, 10)}..</Text>
 
                                 <Text className='w-[65%] text-sm opacity-80 font-semibold text-gray-400'>{item.description.substring(0, 20)}...</Text>
 
                                 <View className='flex-row items-center'>
-                                    <Text className='text-4xl font-semibold mt-2 text-green-500'>₹{item.discountPrice}</Text>
-                                    <Text className='text-xl font-semibold mt-2 text-red-500 ml-4'>₹{item.originalPrice}</Text>
+                                    <Text className='text-xl font-semibold mt-2 text-green-500'>₹{item.discountPrice}</Text>
+                                    <Text className='text-md font-semibold mt-2 line-through text-red-500 ml-4'>₹{item.originalPrice}</Text>
                                 </View>
 
 
@@ -186,7 +186,7 @@ const products = () => {
             {/* create product button  */}
 
             <TouchableOpacity onPress={() => router.push(`/(screens)/createProduct`)} style={{ width: wp(18) }} className=' absolute bottom-12 right-4 items-center justify-center  bg-primary rounded-full p-4'>
-                <Ionicons name='add-circle-outline' size={38} color={"#fff"} />
+                <Ionicons name='add-circle-outline' size={28} color={"#fff"} />
             </TouchableOpacity>
         </>
 

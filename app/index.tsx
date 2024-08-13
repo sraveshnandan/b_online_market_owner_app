@@ -19,7 +19,6 @@ const SplashScreen = () => {
         if (authState) {
             dispatch(fetchAlldata() as any)
             dispatch(fetchUserProfile({ token: authToken }) as any)
-
         }
 
         return () => { }

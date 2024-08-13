@@ -9,11 +9,16 @@ const PrivacyPolicy = () => {
       <Text>
         This Privacy Policy describes Our policies and procedures on the collection, use and disclosure of Your information when You use the Service and tells You about Your privacy rights and how the law protects You.
       </Text>
-     
+
       <Text style={styles.subheader}>Interpretation and Definitions</Text>
       <Text style={styles.subheader}>Interpretation</Text>
       <Text>
         The words of which the initial letter is capitalized have meanings defined under the following conditions. The following definitions shall have the same meaning regardless of whether they appear in singular or in plural.
+      </Text>
+
+      <Text style={styles.subheader}>Rule reguarding product management</Text>
+      <Text>
+        You can only list a product in this app , if it is made by you or if you own that product, please don't  list any suspecious product into this marketplace, otherwise you will be responsible for all leagal concequences.
       </Text>
       <Text style={styles.subheader}>Definitions</Text>
       <Text>For the purposes of this Privacy Policy:</Text>

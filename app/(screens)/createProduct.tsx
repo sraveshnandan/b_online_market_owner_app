@@ -140,7 +140,7 @@ const createProductScreen = () => {
                         <View className='bg-white rounded-md shadow-lg shadow-black w-[80%] p-12'>
 
                             <ActivityIndicator size={"large"} color={Colors.Primary} />
-                            <Text className='text-xl mt-4 font-semibold text-center'>Please wait...</Text>
+                            <Text className='text-xl mt-4 font-medium text-center'>Please wait...</Text>
                         </View>
                     </View>
                 )
@@ -151,7 +151,7 @@ const createProductScreen = () => {
                 <View style={{ minHeight: hp(25) }} className='bg-white items-center justify-center rounded-md w-[96%] mx-auto p-2'>
 
                     {
-                        !productBanner.length && <Text className='text-xl font-semibold text-primary text-center w-full mb-2'>Choose product images.</Text>
+                        !productBanner.length && <Text className='text-xl font-medium text-primary text-center w-full mb-2'>Choose product images.</Text>
                     }
 
                     <View className='w-full  flex-row flex-wrap  mb-2'>
@@ -167,7 +167,7 @@ const createProductScreen = () => {
                     {/* add images button  */}
                     <TouchableOpacity onPress={handleImageSelect} className='flex-row mx-auto w-[50%] p-3 shadow-lg shadow-black bg-primary justify-center rounded-md items-center '>
                         <Ionicons name='images-outline' color={"#fff"} size={28} />
-                        <Text className='text-lg text-white font-semibold ml-2'>Add images</Text>
+                        <Text className='text-lg text-white font-medium ml-2'>Add images</Text>
                     </TouchableOpacity>
                 </View>
 
@@ -177,11 +177,11 @@ const createProductScreen = () => {
                 {
                     selectedCategory?._id && (
                         <View className='w-[96%] my-4 bg-white rounded-md p-2 mx-auto'>
-                            <Text className='text-sm font-semibold text-primary my-2'>Selected category</Text>
+                            <Text className='text-sm font-medium text-primary my-2'>Selected category</Text>
                             <View className='flex-row items-center p-2 bg-primary rounded-md shadow-md py-4 shadow-black '>
 
 
-                                <Text className='text-white font-semibold text-lg flex-grow'>{selectedCategory.name}</Text>
+                                <Text className='text-white font-medium text-lg flex-grow'>{selectedCategory.name}</Text>
                                 <TouchableOpacity onPress={() => setselectedCategory({} as any)} className=' rounded-full p-1 bg-white'>
                                     <Ionicons name='close-sharp' color={"red"} size={22} />
                                 </TouchableOpacity>
@@ -195,7 +195,7 @@ const createProductScreen = () => {
 
                 <View className='w-[96%] mx-auto p-3 rounded-md    bg-white my-2'>
                     <View className='flex-row justify-between w-full'>
-                        <Text className='text-lg font-semibold text-primary'>Choose Product Category</Text>
+                        <Text className='text-lg font-medium text-primary'>Choose Product Category</Text>
                         <Ionicons onPress={() => setcategoryBoxOpen(prev => !prev)} name={categoryBoxOpen ? "chevron-up-sharp" : "chevron-down-sharp"} size={28} />
                     </View>
 
@@ -206,7 +206,7 @@ const createProductScreen = () => {
                                     categories.map((item, index) => (
                                         <TouchableOpacity onPress={() => { setselectedCategory(item); setcategoryBoxOpen(prev => !prev) }} key={index} className={`${selectedCategory?._id === item._id && "bg-primary"} py-3 flex-row flex-grow items-center my-2 rounded-md `}>
                                             <Image source={{ uri: item.image.url }} width={40} height={40} className='rounded-md shadow-md shadow-black object-cover' />
-                                            <Text className={`ml-2 ${selectedCategory?._id === item._id && "text-white"} text-lg font-semibold`}>{item.name}</Text>
+                                            <Text className={`ml-2 ${selectedCategory?._id === item._id && "text-white"} text-lg font-medium`}>{item.name}</Text>
 
                                         </TouchableOpacity>
                                     ))
@@ -223,59 +223,59 @@ const createProductScreen = () => {
                 {/* name  */}
                 <KeyboardAvoidingView className='w-[96%] mx-auto my-2 bg-white rounded-md shadow-md shadow-stone-950 p-2' keyboardVerticalOffset={50}>
                     {/* lable  */}
-                    <Text className='text-primary  font-semibold text-sm'>
+                    <Text className='text-primary  font-medium text-sm'>
                         Product Name
                     </Text>
                     {/* text input  */}
-                    <TextInput value={productData.name} onChangeText={(v) => setproductData(prev => ({ ...prev, name: v }))} className='bg-gray-200 rounded-md shadow-md shadow-black p-2 mt-2 text-lg font-semibold' maxLength={50} keyboardType='default' placeholder='Product name e.g: Apple iphone 15' />
+                    <TextInput value={productData.name} onChangeText={(v) => setproductData(prev => ({ ...prev, name: v }))} className='bg-gray-200 rounded-md shadow-md shadow-black p-2 mt-2 text-lg font-medium' maxLength={50} keyboardType='default' placeholder='Product name e.g: Apple iphone 15' />
                 </KeyboardAvoidingView>
 
                 {/* description  */}
                 <KeyboardAvoidingView className='w-[96%] mx-auto my-2 bg-white rounded-md shadow-md shadow-stone-950 p-2' keyboardVerticalOffset={50}>
                     {/* lable  */}
-                    <Text className='text-primary  font-semibold text-sm'>
+                    <Text className='text-primary  font-medium text-sm'>
                         Product Description
                     </Text>
                     {/* text input  */}
-                    <TextInput value={productData.description} onChangeText={(v) => setproductData(prev => ({ ...prev, description: v }))} multiline={true} className='bg-gray-200 rounded-md shadow-md shadow-black p-2 mt-2 text-lg font-semibold' maxLength={150} keyboardType='default' placeholder='Product description e.g: Introducing new iphone 15 with fully loaded tech.' />
+                    <TextInput value={productData.description} onChangeText={(v) => setproductData(prev => ({ ...prev, description: v }))} multiline={true} className='bg-gray-200 rounded-md shadow-md shadow-black p-2 mt-2 text-lg font-medium' maxLength={150} keyboardType='default' placeholder='Product description e.g: Introducing new iphone 15 with fully loaded tech.' />
                 </KeyboardAvoidingView>
 
 
                 {/* price  */}
                 <KeyboardAvoidingView className='w-[96%] mx-auto my-2 bg-white rounded-md shadow-md shadow-stone-950 p-2' keyboardVerticalOffset={100}>
                     {/* lable  */}
-                    <Text className='text-primary  font-semibold text-sm'>
+                    <Text className='text-primary  font-medium text-sm'>
                         Product Original Price
                     </Text>
                     {/* text input  */}
-                    <TextInput value={productData.originalPrice as any} onChangeText={(v) => setproductData(prev => ({ ...prev, originalPrice: v as any }))} className='bg-gray-200 rounded-md shadow-md shadow-black p-2 mt-2 text-lg font-semibold' maxLength={150} keyboardType='numeric' placeholder='Product Original Price  e.g: 22000' />
+                    <TextInput value={productData.originalPrice as any} onChangeText={(v) => setproductData(prev => ({ ...prev, originalPrice: v as any }))} className='bg-gray-200 rounded-md shadow-md shadow-black p-2 mt-2 text-lg font-medium' maxLength={150} keyboardType='numeric' placeholder='Product Original Price  e.g: 22000' />
                 </KeyboardAvoidingView>
 
                 {/* price  */}
                 <KeyboardAvoidingView className='w-[96%] mx-auto my-2 bg-white rounded-md shadow-md shadow-stone-950 p-2' keyboardVerticalOffset={150}>
                     {/* lable  */}
-                    <Text className='text-primary  font-semibold text-sm'>
+                    <Text className='text-primary  font-medium text-sm'>
                         Product Discounted  Price
                     </Text>
                     {/* text input  */}
-                    <TextInput value={productData.discountPrice as any} onChangeText={(v) => setproductData(prev => ({ ...prev, discountPrice: v as any }))} className='bg-gray-200 rounded-md shadow-md shadow-black p-2 mt-2 text-lg font-semibold' maxLength={5} keyboardType='numeric' placeholder='Product Discounted Price Price  e.g: 19000' />
+                    <TextInput value={productData.discountPrice as any} onChangeText={(v) => setproductData(prev => ({ ...prev, discountPrice: v as any }))} className='bg-gray-200 rounded-md shadow-md shadow-black p-2 mt-2 text-lg font-medium' maxLength={5} keyboardType='numeric' placeholder='Product Discounted Price Price  e.g: 19000' />
                 </KeyboardAvoidingView>
 
 
                 {/* quantuty  */}
                 <KeyboardAvoidingView className='w-[96%] mx-auto my-2 bg-white rounded-md shadow-md shadow-stone-950 p-2' keyboardVerticalOffset={50}>
                     {/* lable  */}
-                    <Text className='text-primary  font-semibold text-sm'>
+                    <Text className='text-primary  font-medium text-sm'>
                         Product Quantity
                     </Text>
                     {/* text input  */}
-                    <TextInput value={productData.quantity as any} onChangeText={(v) => setproductData(prev => ({ ...prev, quantity: v as any }))} multiline={true} className='bg-gray-200 rounded-md shadow-md shadow-black p-2 mt-2 text-lg font-semibold' maxLength={150} keyboardType='number-pad' placeholder='Product Quantity e.g: 10' />
+                    <TextInput value={productData.quantity as any} onChangeText={(v) => setproductData(prev => ({ ...prev, quantity: v as any }))} multiline={true} className='bg-gray-200 rounded-md shadow-md shadow-black p-2 mt-2 text-lg font-medium' maxLength={150} keyboardType='number-pad' placeholder='Product Quantity e.g: 10' />
                 </KeyboardAvoidingView>
 
 
 
                 <TouchableOpacity onPress={handleCreateProduct} className={`bg-primary ${loading && "bg-gray-400"} rounded-md py-4 w-[96%] mx-auto my-4`}>
-                    <Text className={`text-white text-xl font-semibold text-center`}>{loading ? "Creating..." : "Create Product"}</Text>
+                    <Text className={`text-white text-xl font-medium text-center`}>{loading ? "Creating..." : "Create Product"}</Text>
 
                 </TouchableOpacity>
 

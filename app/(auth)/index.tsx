@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchUserProfile, loginUser, setLoading } from '@/redux/reducers/auth.reducer'
 import { RootState } from '@/redux/store'
 import * as Linking from "expo-linking"
+import { fetchAlldata } from '@/redux/reducers/main.reducers'
 
 type Props = {}
 
@@ -82,6 +83,7 @@ const MobileNumberScreen = (props: Props) => {
             try {
                 dispatch(setLoading(true));
 
+
                 const resp = await fetch("https://bom-api-1-0-1.onrender.com/api/v1/user/login", {
                     headers: {
                         "Content-Type": "application/json"
@@ -92,7 +94,7 @@ const MobileNumberScreen = (props: Props) => {
                 const loginRes = await resp.json()
 
                 dispatch(loginUser(loginRes));
-                dispatch(fetchUserProfile({ token: loginRes.token }) as any)
+                dispatch(fetchAlldata() as any)
 
                 if (!loginRes.user.isShopOwner) {
                     return router.push(`/(auth)/startBusiness`)
@@ -103,6 +105,7 @@ const MobileNumberScreen = (props: Props) => {
                     text1: "Logged in successfully."
                 });
 
+                dispatch(fetchUserProfile({ token: loginRes.token }) as any)
 
                 return router.replace(`/(tabs)/home/`)
 

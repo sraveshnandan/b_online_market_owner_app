@@ -21,7 +21,10 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.sravesh.bomo",
-      "versionCode": 2
+      "versionCode": 2,
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -44,6 +47,9 @@
     "extra": {
       "router": {
         "origin": false
+      },
+      "eas": {
+        "projectId": "0d83145f-9ee1-4d93-9bb9-7a998a540527"
       }
     }
   }

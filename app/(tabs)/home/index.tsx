@@ -9,12 +9,14 @@ import Toast from 'react-native-toast-message';
 import { AntDesign, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { fetchAlldata } from '@/redux/reducers/main.reducers';
 import Animated, { FadeInDown } from 'react-native-reanimated';
+import { SupportModel } from '@/components';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch()
   const { userData, authToken, userShop } = useSelector((state: RootState) => state.auth);
   const [refreshing, setrefreshing] = useState(false);
+  const [modelOpen, setmodelOpen] = useState(false)
 
   // states 
 
@@ -26,13 +28,13 @@ const HomeScreen = () => {
       headerLeft: () => (
         <View style={styles.left_nav_container}>
           <Image style={styles.nav_logo} source={require("../../../assets/images/icon.png")} />
-          {userShop && (<Text style={styles.header_nav_text}>{userShop && userShop.name.length > 26 ? `${userShop.name.substring(0, 26)}...` : userShop.name}</Text>)}
+          {userShop._id && (<Text style={styles.header_nav_text}>{userShop && userShop.name.length > 26 ? `${userShop.name.substring(0, 26)}...` : userShop.name}</Text>)}
         </View>
       ),
       // // headerRightSection 
       headerRight: () => (
         <View style={styles.rightHeader}>
-          <AntDesign name='customerservice' size={29} color={Colors.Primary} />
+          <AntDesign onPress={() => setmodelOpen(prev => !prev)} name='customerservice' size={29} color={Colors.Primary} />
         </View>
       ),
 
@@ -78,10 +80,13 @@ const HomeScreen = () => {
   return userData.isShopOwner && userShop.address && (
     <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefress} />} showsVerticalScrollIndicator={false} style={styles.maincontainer}>
       {/* support model  */}
+      {
+        modelOpen && <SupportModel isOpen={modelOpen} setOpen={setmodelOpen} />
+      }
 
 
       {/* shop info */}
-      <View style={{ height: hp(45) }} className='relative   h-fit'>
+      <View style={{ height: hp(45) }} className='relative    h-fit'>
         <View style={{ height: hp(30) }} className='w-[98%] rounded-md overflow-hidden  mx-auto '>
           {userShop.banners.length && (
             <Image source={{ uri: userShop?.banners[0].url }} width={100} height={100} className='w-full h-full object-cover' />
@@ -90,7 +95,7 @@ const HomeScreen = () => {
         </View>
         {/* infocard  */}
 
-        <Animated.View entering={FadeInDown.delay(500).springify()} style={{ height: hp(16) }} className='w-[85%] items-center  shadow-lg shadow-black relative -top-12  z-50 mx-auto p-3 bg-primary rounded-md'>
+        <Animated.View entering={FadeInDown.delay(500).springify()} style={{ height: hp(18) }} className='w-[85%] items-center  shadow-lg shadow-black relative -top-12  z-50 mx-auto p-3 bg-primary rounded-md'>
           <Text className='text-white text-xl '>{userShop.name}
           </Text>
 
@@ -118,7 +123,7 @@ const HomeScreen = () => {
         {ShopMenu.map((item, index) => (
           <TouchableOpacity onPress={() => router.push(item.link)} style={{ height: hp(10) }} key={index} className='items-center justify-center bg-white m-2 p-2 rounded-md shadow-lg shadow-black w-[28%]'>
             <MaterialCommunityIcons name={item.icon as any} size={30} color={Colors.Primary} />
-            <Text className='text-md font-semibold text-primary mt-2'>{item.name}</Text>
+            <Text className='text-sm font-medium text-primary mt-2'>{item.name}</Text>
           </TouchableOpacity>
         ))}
       </View>
@@ -149,7 +154,7 @@ const styles = StyleSheet.create({
     borderRadius: 8
   },
   header_nav_text: {
-    fontSize: hp(2.4),
+    fontSize: hp(2),
     fontWeight: "600"
   },
   maincontainer: {

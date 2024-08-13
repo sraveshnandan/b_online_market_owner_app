@@ -131,7 +131,7 @@ const EditShop = (props: Props) => {
 
 
     return (
-        <ScrollView className='flex-1 p-2'>
+        <ScrollView className='flex-1 py-4'>
 
             {
                 loading && (
@@ -197,7 +197,7 @@ const EditShop = (props: Props) => {
             </KeyboardAvoidingView>
 
 
-            <TouchableOpacity onPress={handleShopEdit} className={`bg-primary rounded-md py-3 w-[98%] mx-auto ${loading && "bg-gray-200"}`}>
+            <TouchableOpacity onPress={handleShopEdit} className={`bg-primary mb-8 rounded-md py-3 w-[96%] mx-auto ${loading && "bg-gray-200"}`}>
 
                 <Text className='text-center text-white font-semibold text-md'>{loading ? "Creating..." : "Edit Shop"}</Text>
 
