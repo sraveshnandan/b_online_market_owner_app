@@ -73,7 +73,7 @@ const walletScreen = () => {
 
             <View className='my-4'>
                 <Text className='text-2xl text-primary font-semibold text-center'>Refer & Earn</Text>
-                <Text className='text-lg text-black font-semibold text-center'>Refer & Earn up to ₹ 5 per successfull referal. </Text>
+                <Text className='text-lg text-black font-semibold text-center'>Refer & Earn up to 20% cahback per successfull refer. </Text>
                 <TouchableOpacity onPress={handlShare} className='bg-gray-200 rounded-md w-[50%] mx-auto flex-row items-center  my-2 p-2'>
                     <Text className='text-2xl font-semibold text-center mr-2'>{userData.referCode}</Text>
                     <Ionicons name='share-social-sharp' size={28} color={Colors.Primary} />

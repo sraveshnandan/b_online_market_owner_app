@@ -147,7 +147,7 @@ const EditShop = (props: Props) => {
                     </View>
                 )
             }
-            <Text className='text-md font-semibold text-primary'>Choose shop  banner image</Text>
+            <Text className='text-md ml-2 font-semibold text-primary'>Choose shop  banner image</Text>
 
             <View className='w-[98%] h-52 items-center justify-center bg-white rounded-md p-2 mx-auto my-2'>
                 {

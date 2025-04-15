@@ -12,6 +12,11 @@ import { persistor, RootState } from '@/redux/store';
 type settingMenuType = { name: string, icon: string, link?: string, screen?: string }
 const settingMenu: settingMenuType[] = [
     {
+        name: "Add/Edit Shop Banner",
+        icon: "tv-outline",
+        screen: "/(screens)/ShopBanners"
+    },
+    {
         name: "Give feedback",
         icon: "apps",
         link: "https://play.google.com/store/apps/details?id=com.sravesh.bom&hl=en"

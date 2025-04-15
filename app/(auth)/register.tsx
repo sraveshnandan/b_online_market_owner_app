@@ -41,7 +41,7 @@ const RegisterScreen = () => {
         }
 
         const apiBodypayload = {
-            full_name, email, phone, referCode, pin_code
+            full_name, email, phone, referCode, pin_code,
         }
 
         setloading(true);

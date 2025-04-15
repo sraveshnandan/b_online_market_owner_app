@@ -96,7 +96,7 @@ const MobileNumberScreen = (props: Props) => {
                 dispatch(loginUser(loginRes));
                 dispatch(fetchAlldata() as any)
 
-                if (!loginRes.user.isShopOwner) {
+                if (!loginRes?.user?.isShopOwner) {
                     return router.push(`/(auth)/startBusiness`)
                 }
 
@@ -134,7 +134,7 @@ const MobileNumberScreen = (props: Props) => {
 
     useEffect(() => {
         dispatch(setLoading(false));
-        if (userData._id) {
+        if (userData?._id) {
             return router.replace(`/(tabs)/home/`)
         }
     }, [])

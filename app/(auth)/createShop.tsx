@@ -119,7 +119,6 @@ const createShop = (props: Props) => {
         })
 
         dispatch(fetchUserProfile({ token: authToken }) as any)
-
         return router.replace(`/(tabs)/home/`)
       }
     } catch (error: any) {

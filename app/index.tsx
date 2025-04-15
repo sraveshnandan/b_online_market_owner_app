@@ -10,17 +10,14 @@ import { useDispatch, useSelector } from 'react-redux'
 const SplashScreen = () => {
     const dispatch = useDispatch()
     const { isloading, orders, isError } = useSelector((state: RootState) => state.main)
-    const { authToken, authState } = useSelector((state: RootState) => state.auth)
+    const { authToken, authState, userShop } = useSelector((state: RootState) => state.auth)
 
     // final useEffect to run api call to load data
     useEffect(() => {
-
-
-        if (authState) {
+        if (authState && userShop) {
             dispatch(fetchAlldata() as any)
             dispatch(fetchUserProfile({ token: authToken }) as any)
         }
-
         return () => { }
     }, [])
     return (

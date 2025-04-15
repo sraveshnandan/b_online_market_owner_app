@@ -14,6 +14,7 @@ const ScreenLayouts = () => {
             <Stack.Screen name='editShop' options={{ headerTitle: "Update your shop details" }} />
             <Stack.Screen name='UpdateOrderStatus' options={{ headerTitle: "Update Order Status" }} />
             <Stack.Screen name='OrderInfo' options={{ headerTitle: "Order Info" }} />
+            <Stack.Screen name='ShopBanners' options={{ headerTitle: "Shop Banner" }} />
             <Stack.Screen name='Refer&Earn' />
         </Stack>
     )

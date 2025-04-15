@@ -18,7 +18,7 @@ const HomeScreen = () => {
   const [refreshing, setrefreshing] = useState(false);
   const [modelOpen, setmodelOpen] = useState(false)
 
-  // states 
+  // states
 
   // setting some header data 
   useLayoutEffect(() => {
@@ -28,7 +28,7 @@ const HomeScreen = () => {
       headerLeft: () => (
         <View style={styles.left_nav_container}>
           <Image style={styles.nav_logo} source={require("../../../assets/images/icon.png")} />
-          {userShop._id && (<Text style={styles.header_nav_text}>{userShop && userShop.name.length > 26 ? `${userShop.name.substring(0, 26)}...` : userShop.name}</Text>)}
+          {userShop._id && (<Text style={styles.header_nav_text}>{userShop && userShop?.name?.length > 26 ? `${userShop.name.substring(0, 26)}...` : userShop.name}</Text>)}
         </View>
       ),
       // // headerRightSection 
@@ -40,7 +40,7 @@ const HomeScreen = () => {
 
     });
 
-  }, [])
+  }, [userShop])
 
 
   // checking if user has any shop 

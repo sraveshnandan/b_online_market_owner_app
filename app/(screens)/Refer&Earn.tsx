@@ -61,19 +61,10 @@ const Refer_earnScreen = () => {
 
     return (
         <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />} className='flex-1 p-2'>
-
-
-            <Text className='text-2xl font-semibold text-primary mb-4 '>
-                Your referal list
-            </Text>
-
-
-
-
             <View className='my-4'>
                 <Text className='text-2xl text-primary font-semibold text-center'>Refer & Earn</Text>
-                <Text className='text-lg text-black font-semibold text-center'>Refer & Earn up to ₹ 5 per successfull referal. </Text>
-                <TouchableOpacity onPress={handlShare} className='bg-gray-200 rounded-md w-[50%] mx-auto flex-row items-center  my-2 p-2'>
+                <Text className='text-lg text-black font-semibold text-center'>Refer & Earn up to 20 % cashback per successfull refer. </Text>
+                <TouchableOpacity onPress={handlShare} className='bg-gray-200 rounded-md w-[50%] mx-auto flex-row items-center  my-4 p-2'>
                     <Text className='text-2xl font-semibold text-center mr-2'>{userData.referCode}</Text>
                     <Ionicons name='share-social-sharp' size={28} color={Colors.Primary} />
                 </TouchableOpacity>

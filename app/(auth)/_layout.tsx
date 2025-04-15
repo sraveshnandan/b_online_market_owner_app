@@ -10,6 +10,11 @@ export default function AuthLayout() {
                 headerShown: true,
                 headerTitle: "Create your shop"
             }} />
+
+            <Stack.Screen name="UpgradeScreen" options={{
+                headerShown: true,
+                headerTitle: "Upgrade your account"
+            }} />
         </Stack>
     )
 }
